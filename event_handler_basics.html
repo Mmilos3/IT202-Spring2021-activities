@@ -29,7 +29,9 @@
     </blockquote>
 
     <script>
-    for(image of document.querySelectorAll("img")) {
+        
+    let images = document.querySelectorAll("img");
+    for(images) {
       image.addEventListener("mouseover", (event) => { 
         event.currentTarget.classList.add("bigger");  
       });
@@ -43,10 +45,6 @@
     quote.addEventListener("click", () => {
     window.open(quote.cite);
     });
-
-
-
-
 
     </script>
 
