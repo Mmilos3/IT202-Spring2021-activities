@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Chart Basics</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+  </head>
+  <body>
+    <main role="main" class="container">
+      <h1 class="mt-5">Chart Basics</h1>
+      <div id="chart_container_schools"></div>
+      <div id="chart_container_vaccine"></div>
+    </main>
+    <script type="module">
+      const getData = async () => {
+        const schoolUrl =
+          "https://data.cityofchicago.org/resource/dw27-rash.json?$SELECT=school_type,count(school_type)&$GROUP=school_type";
+        const vaccineUrl =
+          "https://data.cityofchicago.org/resource/553k-3xzc.json?$SELECT=date,sum(total_doses_cumulative)&$GROUP=date&$ORDER=date";
+        return await Promise.all([
+          fetch(schoolUrl).then((res) => res.json()),
+          fetch(vaccineUrl).then((res) => res.json()),
+        ]);
+      };
+      const drawCharts = async ([schoolData, vaccineData]) => {
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(() => {
+          const schoolTable = new google.visualization.DataTable({
+            cols: [
+              { id: "type", label: "School Type", type: "string" },
+              { id: "count", label: "Count", type: "number" },
+            ],
+            rows: schoolData.map((e) => ({
+              c: [{ v: e.school_type }, { v: parseInt(e.count_school_type) }],
+            })),
+          });
+
+          const vaccineTable = new google.visualization.DataTable({
+            cols: [
+              { label: "Date", type: "date" },
+              { label: "Sum of doses", type: "number" },
+            ],
+            rows: vaccineData.map((e) => ({
+              c: [
+                { v: new Date(e.date) },
+                { v: parseInt(e.sum_total_doses_cumulative) },
+              ],
+            })),
+          });
+
+          const options = {
+            width: 620,
+            height: 500,
+          };
+
+          new google.visualization.PieChart(
+            document.getElementById("chart_container_schools")
+          ).draw(schoolTable, {
+            ...options,
+            title: "Schools by school type",
+          });
+
+          new google.visualization.LineChart(
+            document.getElementById("chart_container_vaccine")
+          ).draw(vaccineTable, {
+            ...options,
+            title: "Vaccine doses",
+          });
+        });
+      };
+      const init = async () => {
+        drawCharts(await getData());
+      };
+      init();
+    </script>
+  </body>
+</html>
