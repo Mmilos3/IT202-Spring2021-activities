@@ -1,0 +1,55 @@
+  
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Karma">
+  <script type="application/javascript">
+    function draw() {
+      var canvas = document.querySelector('#canvas');
+      if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        
+        // name
+        ctx.font = "48px serif"
+        ctx.strokeText('Marty Miloslavich', 100, 100);
+        // circle
+        ctx.arc(100, 200, 80, 0, Math.PI*2, 1);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        // image 
+        var img = new Image();
+        img.onload = function() {
+          for (var j = 0; j < 5; j++) {
+            ctx.drawImage(img, j * 100, 400, 100, 70);
+          }
+        };
+        img.src = 'flower.jpg';
+        // shadow
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "darkblue";
+
+        // rectangle
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(350, 200, 50, 50);
+        ctx.shadowColor = "lightblue";
+
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 400,300, 75,75);
+            ctx.drawImage(img, 200,300, 75,75);
+            ctx.drawImage(img, 300,110, 75,75);
+        }
+        img.src = 'https://s3-prod.chicagobusiness.com/s3fs-public/editorial-chicago-WEB_i.jpg';
+        
+      }
+    }
+  </script>
+ </head>
+ <body onload="draw();">
+   <canvas id="canvas" width="500" height="500" style="background-color: lightblue"></canvas>
+ </body>
+</html>
