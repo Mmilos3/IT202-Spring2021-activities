@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>repl.it</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+  <div>
+        <textarea name="" id="text" placeholder="Enter text here" cols="30" rows="4"></textarea>
+        <select name="" id="select">
+          <option value="">--Select Language--</option>
+            <option value=""></option>
+        </select>
+        <button id="button" disabled>Speak</button>
+    </div>
+      
+    <script>
+    let text;
+        let button = document.querySelector("#button");
+        let select = document.querySelector("#select");
+        let voices = speechSynthesis.getVoices();
+
+
+        setTimeout(() => {
+            voices = speechSynthesis.getVoices();
+            voices.forEach( voice => {
+                let option = document.createElement("option");
+                option.textContent = voice.lang;
+                select.appendChild(option)
+                
+            })
+        }, 1000);
+        
+        button.addEventListener("click", (event) => {
+            text = document.querySelector("#text").value; 
+            const language = select.value;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = language;
+            speechSynthesis.speak(utterance);
+            button.disabled = true;
+        })
+
+        select.addEventListener("change", event => {
+            button.disabled = false;
+        })
+
+</script>
+  </body>
+</html>
